@@ -1,50 +1,54 @@
 import seaborn as sns
 
-# Importing the necessary module to interact w/ Snowflake data
+# Importing the necessary module to interact with Snowflake data
 from snowflake.snowpark.context import get_active_session
-
 session = get_active_session()
 
-# The active session is required to query data from Snowflake. 
-# Snowpark is the SNowflake framework for working iwth data
-# and get_active_session() retrieves a session object that can be used to 
-# run SQL queries against Snowflake tables, returning the results as 
-# a pandas DataFrame.
+# The active session is required to query data from Snowflake.
+# Snowpark is the Snowflake framework for working with data, 
+# and get_active_session() retrieves the current active session.
+# This allows us to run SQL queries directly against Snowflake tables,
+#returning the result as a Pandas DataFrame for further analysis.
+
 
 # Query to group movies by decade
 result = session.sql("""
-select
-    floor(releaseyear / 10) * 10 as decade,
-from
-    notebook_lab_db.public.imdb
+    SELECT 
+        FLOOR(releaseyear / 20) * 20 AS decade
+    FROM notebook_lab_db.public.imdb
 """).to_pandas()
 
-# Use Seaborn's countplot to create a bar chart
-# The x='DECADE' parameter groups bars by the decade column from the result DataFrame
-sns.set_theme(style="whitegrid") # Set the style of the chart
-ax = sns.countplot(x='DECADE', data=result) # Create the bar chart
-
-# Set the title and axis_labels
-ax.set(
-    title='Number of Movies by Decade',
-    xlabel='Decade',
-    ylabel='Number of Movies'
+# Use Seaborn's countplot to create the bar graph by decade
+# The `x="DECADE"` argument ensures that the bars are grouped by the decade column
+sns.set_theme(style="whitegrid") # Set the Seaborn theme for better aesthetics
+ax = sns.countplot(
+    data=result, # Data to plot (grouped by decade)
+    x="DECADE", # x-axis corresponds to decades
 )
 
-# Get the current tick positions on the x-axis
-x_ticks = ax.get_xticks() # Numerical posititons of the ticks
-x_tick_labels = ax.get_xticklabels() # Labels of the ticks
+# Set title and axis labels
+ax.set(
+    title="Number of Movies by Release Year Decade", # Title of the plot
+    xlabel="Decade", # Label for the x-axis
+    ylabel="Number of Movies" # Label for the y-axis
+)
 
-# Update the tick labels to remove the decimal point
-# We use float(label.get_text()) to convert the tick label to a float then convert it to an integer
-ax.set_xticks(x_ticks) # Set the tick positions explicitly to avoid issues w/ dynamic tick positions
-ax.set_xticklabels([str(int(float(label.get_text()))) for label in x_tick_labels]) # Update the tick labels
+# Get the current tick positions on the x-axis (decade positions)
+x_ticks = ax.get_xticks() # These are the numerical positions of the x ticks
+x_tick_labels = ax.get_xticklabels() # These are the labels of the ticks (decades)
 
-# Get the current tick positions on the y-axis
-y_ticks = ax.get_yticks() # Numerical positions of the ticks
-y_tick_labels = ax.get_yticklabels() # Labels of the ticks
+# Update tick labels to remove decimals
+# We use `float(label.get_text())` to remove decimals, then convert it to an integer
+# This ensures that the label is displayed without the ".0" decimal part
+ax.set_xticks(x_ticks)  # Ensure the tick positions are fixed (helps avoid issues with dynamic ticks)
+ax.set_xticklabels([str(int(float(label.get_text()))) for label in x_tick_labels]) # Remove decimals and set the labels
 
-# Set the fixed y-axis tick positions and labels
-ax.set_yticks(y_ticks) # Set the tick positions explicitly to avoid issues w/ dynamic tick positions
-ax.set_yticklabels(y_tick_labels) # Update the tick labels
+# Get the current y-axis tick positions and labels
+y_ticks = ax.get_yticks()  # Get the positions of the y ticks
+y_tick_labels = [f'{int(x):,}' for x in y_ticks]  # Format the tick labels by adding commas to large numbers
+
+# Set the fixed y-axis ticks and labels
+ax.set_yticks(y_ticks)  # Fix the positions
+ax.set_yticklabels(y_tick_labels)  # Set the formatted labels
+
 
