@@ -8,7 +8,7 @@ session = get_active_session()
 # Snowpark is the Snowflake framework for working with data, 
 # and get_active_session() retrieves the current active session.
 # This allows us to run SQL queries directly against Snowflake tables,
-#returning the result as a Pandas DataFrame for further analysis.
+# returning the result as a Pandas DataFrame for further analysis.
 
 
 # Query to group movies by decade
@@ -50,5 +50,3 @@ y_tick_labels = [f'{int(x):,}' for x in y_ticks]  # Format the tick labels by ad
 # Set the fixed y-axis ticks and labels
 ax.set_yticks(y_ticks)  # Fix the positions
 ax.set_yticklabels(y_tick_labels)  # Set the formatted labels
-
-
