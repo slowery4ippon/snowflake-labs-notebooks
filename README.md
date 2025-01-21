@@ -28,6 +28,8 @@ You should see some basic information about the database we just created. Additi
 
 ### Load Data to a new table
 
+We will be using Kaggle's Full IMDb Dataset - provided [here](https://www.kaggle.com/datasets/octopusteam/full-imdb-dataset).
+
 Navigate to 'Data' in the lefthand menu and select 'Add Data'. For this Lab we will be using the 'Load data into a Table' functionality to load data directly from a file into a table:
 
 ![Screenshot of add data button](static/img/add_data_1.png)
